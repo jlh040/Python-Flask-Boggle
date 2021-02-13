@@ -12,6 +12,10 @@ h1 {
     font-size: 60px;
 }
 
+h2 {
+    vertical-align: center;
+}
+
 #game-board-container{
     display: flex;
     justify-content: center;
