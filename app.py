@@ -22,11 +22,11 @@ def handle_guess():
     user_guess = request.get_json()['guess']
     
     if check_if_real_word(user_guess) and check_if_on_board(user_guess):
-        return {'result': 'ok'}
+        return jsonify({'result': 'ok'})
     elif check_if_real_word(user_guess) and not check_if_on_board(user_guess):
-        return {'result': 'not-on-board'}
+        return jsonify({'result': 'not-on-board'})
     else:
-        return {'result': 'not-a-word'}
+        return jsonify({'result': 'not-a-word'})
 
 
 
