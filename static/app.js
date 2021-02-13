@@ -50,3 +50,8 @@ function placeScoreOnPage(scoreH3, score) {
 function removeScoreAndStatus() {
     $('h3').remove();
 }
+
+setTimeout(() => {
+    $('button').attr('type', 'button');
+}, 60000)
+
