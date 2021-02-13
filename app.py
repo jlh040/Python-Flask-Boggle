@@ -11,7 +11,7 @@ boggle_game = Boggle()
 
 @app.route('/game-page')
 def show_game_page():
-    """Show the game board and put the board in the session"""
+    """Show the game board and put the board in the session."""
     game_board = boggle_game.make_board()
     session['game_board'] = game_board
     return render_template('game-page.html', game_board = game_board)

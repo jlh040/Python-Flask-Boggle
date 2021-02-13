@@ -1,0 +1,22 @@
+.game-letter {
+    border-radius: 10px;
+    text-align: center;
+    font-size: 70px;
+    border: 1px solid black;
+    background-color: rgb(7, 225, 233);
+    width: 90px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 60px;
+}
+
+#game-board-container{
+    display: flex;
+    justify-content: center;
+}
+
+.guess-form {
+    text-align: center;
+}
