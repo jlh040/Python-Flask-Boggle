@@ -8,6 +8,7 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
 boggle_game = Boggle()
+words = boggle_game.words
 
 @app.route('/game-page')
 def show_game_page():
@@ -18,10 +19,15 @@ def show_game_page():
 
 @app.route('/submit-guess', methods=['POST'])
 def handle_guess():
-    print(request.get_json()['guess'])
-    info = {'name': 'diesel'}
-    return jsonify(info)
-    # print(request.form['guess'])
+    user_guess = request.get_json()['guess']
+    
+    if check_if_real_word(user_guess) and check_if_on_board(user_guess):
+        return {'result': 'ok'}
+    elif check_if_real_word(user_guess) and not check_if_on_board(user_guess):
+        return {'result': 'not-on-board'}
+    else:
+        return {'result': 'not-a-word'}
+
 
 
 
@@ -32,3 +38,14 @@ def make_board():
 
 def set_session(game_board):
     session['game_board'] = game_board
+
+def check_if_real_word(word):
+    if word in words:
+        return True
+    return
+
+def check_if_on_board(word):
+    if boggle_game.check_valid_word(board = session['game_board'], word=word) == 'ok':
+        return True
+    elif boggle_game.check_valid_word(board = session['game_board'], word=word) == 'not-on-board':
+        return False
