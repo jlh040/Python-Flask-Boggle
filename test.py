@@ -1,5 +1,5 @@
 from unittest import TestCase
-from app import app, make_board, check_if_real_word, check_if_on_board, is_highest_score, set_highest_score_in_session, update_num_of_plays_in_session
+from app import app, make_board, check_if_real_word, check_if_on_board, is_highest_score, set_highest_score_in_session, update_num_of_plays_in_session, set_board_in_session
 from flask import session, jsonify, request
 from boggle import Boggle
 from random import choice
@@ -57,6 +57,14 @@ class FlaskTests(TestCase):
 
         self.assertEqual(len(board), 5)
         self.assertTrue(board[0] and board[1] and board[2] and board[3] and board[4])
+
+    def test_set_board_in_session(self):
+        with app.test_request_context('/game-page'):
+            game_board = Boggle().make_board()
+            set_board_in_session(game_board)
+
+            self.assertEqual(session['game_board'], game_board)
+
 
     def test_check_if_real_word(self):
         word = choice(Boggle().words)
