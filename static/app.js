@@ -1,6 +1,7 @@
 const $guessInput = $('#guess');
 const $submitForm = $('.guess-form');
 const submitRoute = 'http://127.0.0.1:5000/submit-guess';
+const statsRoute = 'http://127.0.0.1:5000/statistics';
 let score = 0;
 
 $submitForm.on('submit', async function(e) {
@@ -51,7 +52,16 @@ function removeScoreAndStatus() {
     $('h3').remove();
 }
 
-setTimeout(() => {
+setTimeout(async function() {
     $('button').attr('type', 'button');
-}, 60000)
+    await sendStatisticsToServer();
+}, 10000)
 
+async function sendStatisticsToServer() {
+    const data = JSON.stringify({ score })
+    const response = await axios.post(
+        statsRoute,
+        data,
+        {headers: {'Content-Type': 'application/json'}}
+    )
+}

@@ -12,9 +12,10 @@ words = boggle_game.words
 
 @app.route('/game-page')
 def show_game_page():
-    """Show the game board and put the board in the session."""
+    """Show the game board and put the board and statistics in the session."""
     game_board = make_board()
-    set_session(game_board)
+    set_board_in_session(game_board)
+    
     return render_template('game-page.html', game_board = game_board)
 
 @app.route('/submit-guess', methods=['POST'])
@@ -28,7 +29,15 @@ def handle_guess():
     else:
         return jsonify({'result': 'not-a-word'})
 
+@app.route('/statistics', methods=['POST'])
+def handle_stats():
+    update_num_of_plays_in_session()
+    score = request.get_json()['score']
+    if is_highest_score(score):
+        set_highest_score_in_session(score)
 
+    print(session['highest_score'], session['num_of_plays'])
+    return jsonify({'message': 'thanks for the statistics!'})
 
 
 
@@ -36,7 +45,7 @@ def make_board():
     game_board = boggle_game.make_board()
     return game_board
 
-def set_session(game_board):
+def set_board_in_session(game_board):
     session['game_board'] = game_board
 
 def check_if_real_word(word):
@@ -49,3 +58,15 @@ def check_if_on_board(word):
         return True
     elif boggle_game.check_valid_word(board = session['game_board'], word=word) == 'not-on-board':
         return False
+
+def is_highest_score(score):
+    if score > session.get('highest_score', 0):
+        return True
+
+def set_highest_score_in_session(score):
+    session['highest_score'] = score
+
+def update_num_of_plays_in_session():
+    num_of_plays = session.get('num_of_plays', 0)
+    num_of_plays += 1
+    session['num_of_plays'] = num_of_plays
