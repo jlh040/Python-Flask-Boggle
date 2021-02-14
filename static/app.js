@@ -52,11 +52,6 @@ function removeScoreAndStatus() {
     $('h3').remove();
 }
 
-setTimeout(async function() {
-    $('button').attr('type', 'button');
-    await sendStatisticsToServer();
-}, 60000)
-
 function hasBeenSeen(guess) {
     if (setOfSeenWords.has(guess)) {
         return true
@@ -70,4 +65,9 @@ async function sendStatisticsToServer() {
     await request.sendRequest();
     return;
 }
+
+setTimeout(async function() {
+    $('button').attr('type', 'button');
+    await sendStatisticsToServer();
+}, 60000)
 
