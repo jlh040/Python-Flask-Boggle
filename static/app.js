@@ -2,6 +2,7 @@ const $guessInput = $('#guess');
 const $submitForm = $('.guess-form');
 const submitRoute = 'http://127.0.0.1:5000/submit-guess';
 const statsRoute = 'http://127.0.0.1:5000/statistics';
+const setOfSeenWords = new Set();
 let score = 0;
 
 $submitForm.on('submit', async function(e) {
@@ -17,13 +18,14 @@ $submitForm.on('submit', async function(e) {
     const request = new Request(submitRoute, data, headers)
     const message = await request.getResponseMessage();
 
-    placeStatusOnPage($h3_status_message, message)
-    updateScore(message, guess)
-    placeScoreOnPage($h3_score_message, score)
+    placeStatusOnPage($h3_status_message, message);
+    updateScore(message, guess);
+    placeScoreOnPage($h3_score_message, score);
+    setOfSeenWords.add(guess);
 })
 
 function updateScore(message, word) {
-    if (message === 'ok') {
+    if (message === 'ok' && !hasBeenSeen(word)) {
         score += word.length
     }
 }
@@ -53,7 +55,13 @@ function removeScoreAndStatus() {
 setTimeout(async function() {
     $('button').attr('type', 'button');
     await sendStatisticsToServer();
-}, 10000)
+}, 60000)
+
+function hasBeenSeen(guess) {
+    if (setOfSeenWords.has(guess)) {
+        return true
+    }
+}
 
 async function sendStatisticsToServer() {
     const data = JSON.stringify({ score })
