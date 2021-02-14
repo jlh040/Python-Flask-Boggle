@@ -37,7 +37,10 @@ def handle_stats():
         set_highest_score_in_session(score)
 
     print(session['highest_score'], session['num_of_plays'])
-    return jsonify({'message': 'thanks for the statistics!'})
+    return jsonify({
+        'highestScore': session['highest_score'],
+        'numOfPlays': session['num_of_plays']
+        })
 
 
 

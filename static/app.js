@@ -12,26 +12,24 @@ $submitForm.on('submit', async function(e) {
     let msg = null;
     let $h3_status_message = $('<h3 class="d-inline mr-3"></h3>');
     let $h3_score_message = $('<h3 class="d-inline"></h3>');
+    const headers = {'Content-Type': 'application/json'};
+    const data = JSON.stringify({ guess })
+    const request = new Request(submitRoute, data, headers)
+    const message = await request.getResponseMessage();
 
-    data = JSON.stringify({ guess })
-    const response = await axios.post(
-        'http://127.0.0.1:5000/submit-guess',
-        data,
-        {headers: {'Content-Type': 'application/json'}}
-    )
-    placeStatusOnPage($h3_status_message, response)
-    updateScore(`Status: ${response.data.result}`, guess)
+    placeStatusOnPage($h3_status_message, message)
+    updateScore(message, guess)
     placeScoreOnPage($h3_score_message, score)
 })
 
 function updateScore(message, word) {
-    if (message === 'Status: ok') {
+    if (message === 'ok') {
         score += word.length
     }
 }
 
-function placeStatusOnPage(h3, resp) {
-    text = 'Status: ' + resp.data.result;
+function placeStatusOnPage(h3, message) {
+    text = 'Status: ' + message;
     h3.text(text);
     if (h3.text() === 'Status: ok') {
         h3.css('color', 'green');
@@ -59,9 +57,9 @@ setTimeout(async function() {
 
 async function sendStatisticsToServer() {
     const data = JSON.stringify({ score })
-    const response = await axios.post(
-        statsRoute,
-        data,
-        {headers: {'Content-Type': 'application/json'}}
-    )
+    const headers = {'Content-Type': 'application/json'};
+    const request = new Request(statsRoute, data, headers)
+    await request.sendRequest();
+    return;
 }
+
